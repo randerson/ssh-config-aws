@@ -17,26 +17,42 @@ secret_access_key = config.match(/AWS_SECRET_KEY=(.+)/)[1]
 
 # Add more regions here if necessary. No harm in adding all of them, just makes the generation take longer to query more regions.
 regions = [
-  'us-east-1',
-  'us-west-2'
+  'us-east-1'
+#,
+#  'us-west-2'
 ]
 
-ssh_config = ''
+ssh_config = "# AWS hosts\n\n"
 
 regions.each do |region|
   AWS.config access_key_id: access_key_id, secret_access_key: secret_access_key, region: region
   ec2 = AWS.ec2
 
   ec2.instances.each do |instance|
-    if(instance.status == :running && instance.tags['Name'])
+    if(instance.status == :running && instance.tags['Name'] )
       instance_name = instance.tags['Name'].gsub /[^a-zA-Z0-9\-_\.]/, '-'
-      instance_user = instance.tags['User'] || 'ubuntu'
-      puts "#{instance.id}: #{instance_name} #{instance.ip_address} (#{instance_user})"
+      instance_user = instance.tags['User'] || 'batchblue'
+      puts "#{instance.id}: #{instance_name} #{instance.public_ip_address||instance.private_ip_address} (#{instance_user})"
       ssh_config << "Host #{instance_name}\n"
-      ssh_config << "  HostName #{instance.ip_address}\n"
+      
+      if(instance.public_ip_address != nil)
+        ssh_config << "  HostName #{instance.public_ip_address}\n"
+      elsif(instance.private_ip_address != nil)
+        ssh_config << "  HostName #{instance.private_ip_address}\n"
+        puts "  tags:\n"
+        instance.tags.each do |i| puts "    " + i.to_s + "\n" 
+          if i.to_s.include? "prod-"
+                 ssh_config << "  ProxyCommand ssh -q -e none prod-vpc-jump exec nc %h %p\n"
+            elsif i.to_s.include? "staging-" 
+                 ssh_config << "  ProxyCommand ssh -q -e none staging-vpc-jump exec nc %h %p\n"
+          end
+        end
+#        ssh_config << "  ProxyCommand ssh -q -e none #{instance.prod-jump or staging-jump} exec nc %h %p 
+      end
       ssh_config << "  User #{instance_user}\n"
-      ssh_config << "  IdentityFile ~/.ssh/#{instance.key_name}.aws.pem\n"
-      ssh_config << "\n"
+      ssh_config << "  IdentityFile ~/.ssh/batchblue_rsa\n"
+      ssh_config << "  Port 2222"
+      ssh_config << "\n\n"
     end
   end
 end

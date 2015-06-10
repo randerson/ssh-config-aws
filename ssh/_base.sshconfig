@@ -1,4 +1,100 @@
 Host *
   ServerAliveInterval 60
   ForwardAgent yes
-  IdentitiesOnly yes
+#  IdentitiesOnly yes
+
+#My VAX/VMS host
+Host technocratia.net
+    User anderson
+
+# SBWeb
+Host sbweb.linode
+    User builder
+    Port 2222
+    Hostname 69.164.220.27
+    IdentityFile ~/.ssh/batchblue_rsa
+
+# Marcomm
+Host *.wpengine.com
+     IdentityFile ~/.ssh/batchblue_rsa
+
+Host marcomm.linode
+    User builder
+    Port 2222
+    Hostname 97.107.131.229
+    IdentityFile ~/.ssh/batchblue_rsa
+
+Host blog.linode
+     User builder
+     Port 2222
+     Hostname 66.175.210.86
+     IdentityFile ~/.ssh/batchblue_rsa
+
+# OGBB
+Host web-2.batchbook.net
+    User builder
+    Hostname 192.168.100.162
+    ProxyCommand ssh -q -e none web-6.batchbook.net exec nc %h %p
+    IdentityFile ~/.ssh/batchblue_rsa
+
+Host web-3.batchbook.net
+    User builder
+    Hostname 192.168.100.164
+    ProxyCommand ssh -q -e none web-6.batchbook.net exec nc %h %p
+    IdentityFile ~/.ssh/batchblue_rsa
+
+Host web-4.batchbook.net
+    User builder
+    Hostname 192.168.100.165
+    ProxyCommand ssh -q -e none web-6.batchbook.net exec nc %h %p
+    IdentityFile ~/.ssh/batchblue_rsa
+
+Host web-5.batchbook.net
+    User builder
+    Hostname 192.168.100.166
+    ProxyCommand ssh -q -e none web-6.batchbook.net exec nc %h %p
+    IdentityFile ~/.ssh/batchblue_rsa
+
+Host web-6.batchbook.net
+    User builder
+    Port 2222
+    Hostname 174.143.72.167
+    IdentityFile ~/.ssh/batchblue_rsa
+
+Host web-7.batchbook.net
+    User builder
+    Hostname 192.168.100.168
+    ProxyCommand ssh -q -e none web-6.batchbook.net exec nc %h %p
+    IdentityFile ~/.ssh/batchblue_rsa
+
+Host web-8.batchbook.net
+    User builder
+    Hostname 192.168.100.169
+    ProxyCommand ssh -q -e none web-6.batchbook.net exec nc %h %p
+    IdentityFile ~/.ssh/batchblue_rsa
+
+Host web-9.batchbook.net
+    User builder
+    Hostname 192.168.100.170
+    ProxyCommand ssh -q -e none web-6.batchbook.net exec nc %h %p
+    IdentityFile ~/.ssh/batchblue_rsa
+
+Host db-3.batchbook.net
+    User builder
+    Hostname 192.168.100.163
+    ProxyCommand ssh -q -e none web-6.batchbook.net exec nc %h %p
+    IdentityFile ~/.ssh/batchblue_rsa
+
+Host cloud-1.batchbook.net
+    User builder
+    Hostname 10.177.208.103
+    ProxyCommand ssh -q -e none web-6.batchbook.net exec nc %h %p
+    IdentityFile ~/.ssh/batchblue_rsa
+
+Host cloud-2.batchbook.net
+    User builder
+    Hostname 10.177.208.209
+    ProxyCommand ssh -q -e none web-6.batchbook.net exec nc %h %p
+    IdentityFile ~/.ssh/batchblue_rsa
+
+# End of custom template
